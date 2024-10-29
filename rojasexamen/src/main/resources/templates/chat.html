@@ -1,0 +1,31 @@
+<html>
+    <head>
+        <title>Chat</title>
+    </head>
+    <body>
+        <input type="text" id="name" placeholder="Tu nombre">
+        <input type="text" id="msj" placeholder="Mensaje">
+        <button onclick="sendMessage()">Enviar</button>
+        <div id="messageArea">
+
+        </div>
+        
+    </body>
+    <script th:inline="javascript">
+        let socket = new WebSocket("ws://localhost:8080/chat");
+        
+        socket.onmessage = function(event){
+        	let messageArea = document.getElementById("messageArea");
+        	messageArea.innerHtml += '<p>' + event.data + '</p>'
+        }
+        
+        function sendMessage(){
+        	let name = document.getElementById("name");
+        	let msj = document.getElementById("msj");
+        	
+        	let fullMessage = name.value + ": " + msj.value;
+        	socket.send(fullMessage);
+        	msj.value='';
+        }
+    </script>
+</html>
